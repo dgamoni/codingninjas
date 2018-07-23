@@ -1,0 +1,100 @@
+<?php
+/**
+ * Template part for displaying posts
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package WordPress
+ * @subpackage Twenty_Seventeen
+ * @since 1.0
+ * @version 1.2
+ */
+
+?>
+
+<?php 
+
+$mov_subheading = get_post_meta($post->ID, 'mov_subheading', 1);
+$mov_price = get_post_meta($post->ID, 'mov_price', 1);
+?>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<?php
+	if ( is_sticky() && is_home() ) :
+		echo twentyseventeen_get_svg( array( 'icon' => 'thumb-tack' ) );
+	endif;
+	?>
+	<header class="entry-header">
+		<?php
+		// if ( 'movies' === get_post_type() ) {
+		// 	echo '<div class="entry-meta">';
+		// 		if ( is_single() ) {
+		// 			twentyseventeen_posted_on();
+		// 		} else {
+		// 			echo twentyseventeen_time_link();
+		// 			twentyseventeen_edit_link();
+		// 		};
+		// 	echo '</div><!-- .entry-meta -->';
+		// };
+
+		if ( is_single() ) {
+			the_title( '<h1 class="entry-title">', '</h1>' );
+			
+			if( $mov_subheading ) {
+				echo '<h3 class="entry-title">' .$mov_subheading. '</h3>';
+			}
+
+		} elseif ( is_front_page() && is_home() ) {
+			the_title( '<h3 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h3>' );
+		} else {
+			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
+		}
+		?>
+	</header><!-- .entry-header -->
+
+	<?php if ( '' !== get_the_post_thumbnail() && ! is_single() ) : ?>
+		<div class="post-thumbnail">
+			<a href="<?php the_permalink(); ?>">
+				<?php the_post_thumbnail( 'twentyseventeen-featured-image' ); ?>
+			</a>
+		</div><!-- .post-thumbnail -->
+	<?php endif; ?>
+
+	<div class="entry-content">
+		<?php
+		/* translators: %s: Name of current post */
+		the_content( sprintf(
+			__( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'twentyseventeen' ),
+			get_the_title()
+		) ); ?>
+
+		<?php if( $mov_price ) { ?>
+			<span class="woocommerce-Price-amount amount">
+				<span class="woocommerce-Price-currencySymbol"><?php echo get_woocommerce_currency_symbol(); ?></span>
+				<?php echo $mov_price; ?>
+			</span>
+		<?php } ?>
+
+	    <form action="" method="post">
+	        <input name="add-to-cart" type="hidden" value="<?php echo $post->ID ?>" />
+	        <input name="quantity" type="number" value="1" min="1" style="display:none;" />
+	        <input name="submit" type="submit" value="Buy Now!" />
+	    </form>
+
+
+		<?php 
+		wp_link_pages( array(
+			'before'      => '<div class="page-links">' . __( 'Pages:', 'twentyseventeen' ),
+			'after'       => '</div>',
+			'link_before' => '<span class="page-number">',
+			'link_after'  => '</span>',
+		) );
+		?>
+	</div><!-- .entry-content -->
+
+	<?php
+	if ( is_single() ) {
+		twentyseventeen_entry_footer();
+	}
+	?>
+
+</article><!-- #post-## -->
