@@ -1,9 +1,9 @@
 <?php
 //redirect to checkout
-add_filter('add_to_cart_redirect', 'bgt_add_to_cart_redirect');
+add_filter('woocommerce_add_to_cart_redirect', 'bgt_add_to_cart_redirect');
 function bgt_add_to_cart_redirect() {
 	 global $woocommerce;
-	 $bgt_add_to_cart_redirect = $woocommerce->cart->get_checkout_url();
+	 $bgt_add_to_cart_redirect = wc_get_checkout_url();
 	 return $bgt_add_to_cart_redirect;
 }
 

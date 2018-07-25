@@ -117,3 +117,32 @@ function save_extra_user_profile_fields( $user_id ) {
     update_user_meta( $user_id, 'user_skype', $_POST['user_skype'] );
 }
 
+/**
+ * Add custom fields to register
+ */
+add_action( 'woocommerce_register_form', 'bgt_extra_register_fields' );
+function bgt_extra_register_fields() {
+    ?>
+        <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label for="user_skype"><?php esc_html_e( 'Skype', 'test-codingninjas-child' ); ?></label>
+            <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="user_skype" id="user_skype" autocomplete="user_skype" value="<?php echo ( ! empty( $_POST['user_skype'] ) ) ? esc_attr( wp_unslash( $_POST['user_skype'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
+        </p>
+    <?php
+}
+
+// validate
+//add_action( 'woocommerce_register_post', 'bgt_validate_extra_register_fields', 10, 3 );
+function wooc_validate_extra_register_fields( $username, $email, $validation_errors ) {
+       if ( isset( $_POST['user_skype'] ) && empty( $_POST['user_skype'] ) ) {
+              $validation_errors->add( 'user_skype_error', __( '<strong>Error</strong>: Skype is required!.', 'test-codingninjas-child' ) );
+       }
+    return $validation_errors;
+}
+
+// save
+add_action('woocommerce_created_customer', 'bgt_save_extra_register_fields', 10 , 3);
+function bgt_save_extra_register_fields( $customer_id, $new_customer_data, $password_generated) {
+   if ( isset( $_POST['user_skype'] ) ) {
+        update_user_meta( $customer_id, 'user_skype', sanitize_text_field($_POST['user_skype'])  );
+    }
+}
