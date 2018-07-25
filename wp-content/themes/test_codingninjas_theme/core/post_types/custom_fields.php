@@ -14,7 +14,7 @@ function bgt_movies_meta_box_callback( $post, $meta ){
 
 	// nonce
 	wp_nonce_field(basename(__FILE__), "bgt_movies_meta_box-nonce");
-
+	$featured = get_post_meta($post->ID, 'mov_favorites', 1);
 	// fileds
 	echo '<p style="display: flex; justify-content: space-around;">';
 		echo '<label for="mov_subheading" style="width: 20%;" >' . __("Subheading: ", 'test-codingninjas-child' ) . '</label> ';
@@ -22,7 +22,10 @@ function bgt_movies_meta_box_callback( $post, $meta ){
 	echo '</p><p style="display: flex; justify-content: space-around;">';
 		echo '<label for="mov_price" style="width: 20%;" >' . __("Price: ", 'test-codingninjas-child' ) . '</label> ';
 		echo '<input type="text" id="mov_price" name="mov_price" value="' . get_post_meta($post->ID, 'mov_price', 1) . '" size="10" style="width:80%;" />';
-	echo '</p>';
+	echo '</p><p style="display: flex; ">';
+		echo '<label for="mov_favorites" style="width: 20%;" >' . __("Favorites: ", 'test-codingninjas-child' ) . '</label> ';
+		echo '<input type="checkbox" id="mov_favorites" name="mov_favorites" value="1" '. checked( 1, $featured, false) .' style="" />';
+	echo '</p>';	
 }
 
 // save
@@ -54,5 +57,10 @@ function bgt_save_postdata( $post_id ) {
 		update_post_meta( $post_id, 'mov_subheading', $mov_subheading );
 	}
 
+	if( isset($_POST['mov_favorites'])){
+		update_post_meta( $post_id, 'mov_favorites', $_POST['mov_favorites'] );
+	} else {
+        delete_post_meta( $post_id, 'mov_favorites' );
+	}
 
 }
